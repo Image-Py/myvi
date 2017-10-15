@@ -30,7 +30,6 @@ class Canvas3D(glcanvas.GLCanvas):
         self.Bind(wx.EVT_MOTION, self.OnMouseMotion)
         self.Bind(wx.EVT_MOUSEWHEEL, self.OnMouseWheel)
         self.lastx, self.lasty = None, None
-        self.Bind(wx.EVT_IDLE, self.on_idle)
         self.update = True
         #print('init===========')
 
@@ -44,11 +43,6 @@ class Canvas3D(glcanvas.GLCanvas):
         #self.manager.count_mvp()
         self.manager.draw()
         self.SwapBuffers()
-
-    def on_idle(self, event):
-        if self.update:
-            self.Refresh(False)
-            self.update = False
 
     def OnSize(self, event):
         wx.CallAfter(self.DoSetViewport)
@@ -258,7 +252,7 @@ class Viewer3D(wx.Panel):
         self.sli_blend.SetValue(int(self.curobj.blend*10))
         self.cho_mode.SetSelection(['mesh', 'grid'].index(self.curobj.mode))
 
-    def add_obj_ansy(self, name, vts, fs, ns, cs, mode=None, blend=None, color=None, visible=None):
+    def add_obj_asyn(self, name, vts, fs, ns, cs, mode=None, blend=None, color=None, visible=None):
         wx.CallAfter(pub.sendMessage, 'add_obj', name=name, vts=vts, fs=fs, ns=ns, cs=cs, obj=self,
             mode=mode, blend=blend, color=color, visible=visible)
 

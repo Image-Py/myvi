@@ -1,7 +1,8 @@
 Myvi
 ======================
-Myvi is a 3D visualization tool, just like a simple ang light Mayavi.
+Myvi is a 3D visualization tool, the name comes form mayavi (Myvi is a lighter one, also means mine), Myvi is not as powerful as Mayavi, but do some simple work is enough, what more, mayavi has a heavy dependence, vtk, traits, chaco..., It is difficult to install, and has many historical burden, did not support wxpython-phoenix. but myvi just need ModernGL, support wxpython-phoenix, and you can use Myvi's Manager with any UI Framework(QT) esaily.
 
+## Tutorial
 ### A sigle ball
 ```python
 # give position, r, and color
@@ -52,7 +53,25 @@ manager.show('Line Rings')
  ```
  ![](http://myvi.imagepy.org/imgs/line.jpg "line")
  
- ### grid and mesh
+### Balls and Lines
+```python
+os = np.random.rand(30).reshape((-1,3))
+rs = np.random.rand(10)/7
+cs = (np.random.rand(10)*255).astype(np.uint8)
+cs = myvi.linear_color('jet')[cs]/255
+
+vts_b, fs_b, ns_b, cs_b = myvi.build_balls(list(os), list(rs), list(cs))
+vts_l, fs_l, ns_l, cs_l = myvi.build_line(os[:,0], os[:,1], os[:,2], list(cs))
+
+manager = myvi.Manager()
+manager.add_obj('balls', vts_b, fs_b, ns_b, cs_b)
+line = manager.add_obj('line', vts_l, fs_l, ns_l, cs_l)
+line.set_style(mode='grid')
+manager.show('Balls Ring Demo')
+```
+ ![](http://myvi.imagepy.org/imgs/ball_ring.jpg "line")
+
+### grid and mesh
 ```python
 dphi, dtheta = np.pi/20.0, np.pi/20.0  
 [phi,theta] = np.mgrid[0:np.pi+dphi*1.5:dphi,0:2*np.pi+dtheta*1.5:dtheta]  
@@ -110,24 +129,200 @@ class YourFrame(wx.Frame):
 		...
  ```
  
- ## Documents
+## Documents
+There are 4 module in myvi:
+* **util:** help to generate the geometry and colors
+* **manager:** manage the render object
+* **canvas3d:** a wx.GLCanvas panel, and a viewer3d panel
+* **frame3d:** a simple Frame to wrap the viewer.
 
-> **ske:** should be a nd skeleton image
-> **return:** is a networkx Graph object
-### graph detail:
-> **graph.node[id]['pts'] :** Numpy(x, n), coordinates of nodes points
-> **graph.node[id]['o']:** Numpy(n), centried of the node
-> **graph.edge(id1, id2)['pts']:** Numpy(x, n), sequence of the edge point
-> **graph.edge(id1, id2)['weight']:** float, length of this edge
+you can access the function by the module (**myvi.util.build_surf2d**), and you can also use myvi to access every functions (**myvi.build_surf2d**).
+### util: 
+util help to generate geometry and colors. every build function return vts, fs, ns, cs. which can be added in the manager.
 
+**def build_surf2d(img, ds=1, sigma=0, k=0.2):**
+> **img:** M x N ndarray of uint8
+>
+> **ds:** how many pixel one sample
+>
+> **sigma:** do a gaussian blur to smooth
+>
+> **k:** scale on z axis
 
-### Build Graph:
-build Graph by Skeleton, then plot as a vector Graph in matplotlib.
+> **return:** vts, fs, ns, cs
 
-![](http://home.imagepy.org/sknw/buildgraph.png "??")
-### Find Path
-then you can use networkx do what you want
-![](http://home.imagepy.org/sknw/findpath.png "??")
-### 3D Skeleton
-sknw can works on nd image, this is a 3d demo by mayavi
-![](http://home.imagepy.org/sknw/3dgraph.png "??")
+**build_surf3d(imgs, ds, level, step=1, c=(1,0,0)):**
+> **imgs:** M x N x K ndarray of uint8
+>
+> **ds:** down sample
+>
+> **level:** which value to march
+>
+> **step:** how many pixel one step when marching
+>
+> **c:** the color
+
+> **return:** vts, fs, ns, cs
+
+**build_ball(o, r, c=(1,0,0)):**
+> **o:** center of ball
+>
+> **r:** r of ball
+>
+> **color:** color of ball
+
+> **return:** vts, fs, ns, cs
+
+**build_balls(os, rs, cs=(1,0,0)):**
+>
+> **os:** centers of balls
+> 
+> **rs:** rs of balls
+>
+> **cs:** color of balls, can be a rgb tuple or a sequence like vts
+
+> **return:** vts, fs, ns, cs
+
+**build_line(xs, ys, zs, c):**
+>
+> **xs:** x coordinates of line
+> 
+> **ys:** y coordinates of line
+> 
+> **zs:** z coordinates of line
+> 
+> **color:** color of line, can be a rgb tuple or a sequence like vts
+
+> **return:** vts, fs, ns, cs
+>
+**build_lines(xs, ys, zs, cs):**
+>
+> **xs:** xs coordinates of lines
+> 
+> **ys:** ys coordinates of lines
+> 
+> **zs:** zs coordinates of lines
+> 
+> **color:** color of lines, can be a rgb tuple or a sequence like vts
+
+> **return:** vts, fs, ns, cs
+
+**build_mesh(xs, ys, zs, c=(1,0,0)):**
+>
+> **xs:** x coordinates of mesh
+> 
+> **ys:** y coordinates of mesh
+> 
+> **zs:** z coordinates of mesh
+> 
+> **color:** color of lines, can be a rgb tuple or a sequence like vts
+
+> **return:** vts, fs, ns, cs
+
+**linear_color(cs):**
+>
+> **cs:** list of colors
+ 
+> **return:** color
+
+**auto_lookup(vs, cmap):**
+>
+> **vs:** value of point
+> 
+> **cmap:** color map
+
+> **return:** color of every point
+---
+### Surface:
+Surface is a geometry object.
+
+**__init__(self, vts, fs, ns, cs=(0,0,1)):**
+
+> **vts:** vertex, ndarray of N x 3
+> 
+> **fs:** faces index of vertex, ndarray of N x 3
+> 
+> **ns:** normal vector of every 
+> 
+> **cs:** colors, can be a rgb tuple or a sequence like vts
+> 
+**set_style(self, mode=None, blend=None, color=None, visible=None):**
+
+> **mode:** set the render mode of object, *grid* or *mesh*
+> 
+> **blend:** set the blend of object
+> 
+> **color:** set the color of object, can be a rgb tuple or a sequence like xs
+> 
+> **visible:** set the visible of object, bool
+
+---
+### Manager:
+Manage the objects, and their boundbox, background color, mvp matrix...
+
+**add_obj(self, name, vts, fs, ns=None, cs=(0,0,1)):**
+> **name:** object's name, you can use get_obj to find it later.
+> 
+> **vts:** vertex, ndarray of N x 3
+> 
+> **fs:** faces index of vertex, ndarray of N x 3
+> 
+> **ns:** normal vector of every 
+> 
+> **cs:** colors, can be a rgb tuple or a sequence like vts
+
+> **return:** the Surface object
+> 
+**get_obj(self, name):**
+>
+> **name:** find the object by name, return None if not found
+>
+**show(self, title='Myvi'):** 
+
+show a window when use manager to wrote a demo, just like matplotlib's plt.show(), when you embed Viewer3D in your Frame, you need not to call it.
+> **title:** the title of the frame
+
+*the functions below, you need not call directly when use myvi as a api, unless you want to control it yourself*
+
+**draw(self):** render the objects
+
+**count_box(self):** count the boundbox of all objects
+
+**count_mvp(self):** count the mvp matrix
+
+**set_viewport(self, x, y, width, height):** set viewport
+
+**set_background(self, rgb):** set background color
+
+**reset(self, fovy=45, angx=0, angy=0):** reset the view by given 
+
+**set_pers(self, fovy=None, angx=None, angy=None, l=None, pers=None):** set the perspect matrix
+
+---
+### Canvas3D
+A wx.GLCanvas object, which to render the object, which has a Manager object. you need not use it directly in general, because you can use Viewer3D, which you can control it esaily.
+
+---
+### Viewer3D
+A wx.Panel, which has a Canvas3D, and has a navigation bar, you can embed it in your Frame where you want.
+
+**__init__( self, parent, manager=None):**
+> **parent:** parent frame
+> 
+> **manager:** if manager is given, viewer's Canvas3D object will use it, else a new empty  manager is created.
+
+**add_obj(self, name, vts, fs, ns, cs, obj=None, mode=None, blend=None, color=None, visible=None):**
+> you can create a manager, and add object to it, then use it to create a Viewer3D. But after the viewer is created, you should use viewer's add_obj to add object, this make sure the ui refresh.
+>
+**add_obj_asyn(self, name, vts, fs, ns, cs, mode=None, blend=None, color=None, visible=None):**
+> sometimes, we want to do some processing background (if the data is too large), then you should use add_obj_asyn instead.
+
+## About ImagePy
+[https://github.com/Image-Py/imagepy](https://github.com/Image-Py/imagepy)
+
+ImagePy is my opensource imageprocess framework, It is a ImageJ of Python, you can wrap any numpy baesd function esaily. And Myvi is a sub module of ImagePy, You can use Myvi without any code.
+
+![](http://myvi.imagepy.org/imgs/tooth.jpg "vessel")
+
+## bug but I can't solve
+In some computer not looks well when set the blend.
