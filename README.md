@@ -15,15 +15,15 @@ manager.show('Ball Demo')
 
 ### Random balls with random r and color
 ```python
-	os = np.random.rand(30).reshape((-1,3))
-	rs = np.random.rand(10)/5
-	cs = (np.random.rand(10)*255).astype(np.uint8)
-	cs = myvi.linear_color('jet')[cs]/255
+os = np.random.rand(30).reshape((-1,3))
+rs = np.random.rand(10)/5
+cs = (np.random.rand(10)*255).astype(np.uint8)
+cs = myvi.linear_color('jet')[cs]/255
 
-	vts, fs, ns, cs = myvi.build_balls(os, rs, cs)
-	manager = myvi.Manager()
-	manager.add_obj('balls', vts, fs, ns, cs)
-	manager.show('Random Balls Demo')
+vts, fs, ns, cs = myvi.build_balls(os, rs, cs)
+manager = myvi.Manager()
+manager.add_obj('balls', vts, fs, ns, cs)
+manager.show('Random Balls Demo')
  ```
  ![](http://myvi.imagepy.org/imgs/balls.jpg "balls")
  
@@ -97,6 +97,21 @@ manager.show('Vessel Demo')
  ```
  ![](http://myvi.imagepy.org/imgs/vessel.jpg "vessel")
  
+ ### Embed in your ui program
+ myvi.Viewer3D is a wxpanel, which contains a manager, implements render and interactive. you can just put the viewer in your program, then you can add object in.
+ 
+ ```python
+class YourFrame(wx.Frame):
+	def __init__(self, parent, title='Frame3D', manager=None):
+		wx.Frame.__init__(...)
+		...
+		self.viewer = Viewer3D(self)
+        self.viewer.add_obj('name', vts, fs, ns, cs)
+		...
+ ```
+ 
+ ## Documents
+
 > **ske:** should be a nd skeleton image
 > **return:** is a networkx Graph object
 ### graph detail:
