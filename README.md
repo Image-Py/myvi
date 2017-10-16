@@ -1,6 +1,6 @@
 Myvi
 ======================
-Myvi is a 3D visualization tool, the name comes form mayavi (Myvi is a lighter one, also means mine), Myvi is not as powerful as Mayavi, but do some simple work is enough, what more, mayavi has a heavy dependence, vtk, traits, chaco..., It is difficult to install, and has many historical burden, did not support wxpython-phoenix. but myvi just need ModernGL, support wxpython-phoenix, and you can use Myvi's Manager with any UI Framework(QT) esaily.
+Myvi is a 3D visualization tool, *the name comes from [mayavi](http://code.enthought.com/projects/mayavi/) (Myvi is a lighter one, it also means mine)*, Myvi is not as powerful as Mayavi, but to do some simple work it is enough, what is more, mayavi has a heavy dependence, *vtk, traits, chaco...*, it is difficult to install, has many historical burdens, and did not support wxpython-phoenix. However, myvi just needs ModernGL, supports wxpython-phoenix and you can use Myvi's Manager with any UI Framework (such as  QT) easily.
 
 ## Tutorial
 ### A sigle ball
@@ -117,7 +117,7 @@ manager.show('Vessel Demo')
  ![](http://myvi.imagepy.org/imgs/vessel.jpg "vessel")
  
  ### Embed in your ui program
- myvi.Viewer3D is a wxpanel, which contains a manager, implements render and interactive. you can just put the viewer in your program, then you can add object in.
+ myvi.Viewer3D is a wxpanel, which contains a manager, implements rendering and is interactive. You can just put the viewer into your program, then you can add objects in.
  
  ```python
 class YourFrame(wx.Frame):
@@ -130,15 +130,15 @@ class YourFrame(wx.Frame):
  ```
  
 ## Documents
-There are 4 module in myvi:
+There are 4 modules in myvi:
 * **util:** help to generate the geometry and colors
 * **manager:** manage the render object
 * **canvas3d:** a wx.GLCanvas panel, and a viewer3d panel
 * **frame3d:** a simple Frame to wrap the viewer.
 
-you can access the function by the module (**myvi.util.build_surf2d**), and you can also use myvi to access every functions (**myvi.build_surf2d**).
+You can access the function by the module (**myvi.util.build_surf2d**), and you can also use myvi to access every function (**myvi.build_surf2d**).
 ### util: 
-util help to generate geometry and colors. every build function return vts, fs, ns, cs. which can be added in the manager.
+Utilities help to generate geometry and colors. Every build function returns `vts, fs, ns, cs` which can then be added in the manager.
 
 **def build_surf2d(img, ds=1, sigma=0, k=0.2):**
 > **img:** M x N ndarray of uint8
@@ -258,7 +258,7 @@ Surface is a geometry object.
 
 ---
 ### Manager:
-Manage the objects, and their boundbox, background color, mvp matrix...
+Manage the objects, and their boundbox, background color, mvp matrix, etc.
 
 **add_obj(self, name, vts, fs, ns=None, cs=(0,0,1)):**
 > **name:** object's name, you can use get_obj to find it later.
@@ -279,10 +279,10 @@ Manage the objects, and their boundbox, background color, mvp matrix...
 >
 **show(self, title='Myvi'):** 
 
-show a window when use manager to wrote a demo, just like matplotlib's plt.show(), when you embed Viewer3D in your Frame, you need not to call it.
+Show a window when use manager to wrote a demo, just like matplotlib's plt.show(), when you embed Viewer3D in your Frame, you do not need to call it.
 > **title:** the title of the frame
 
-*the functions below, you need not call directly when use myvi as a api, unless you want to control it yourself*
+*The functions below, you do not need to call directly when using myvi as a api, unless you want to control it yourself*
 
 **draw(self):** render the objects
 
@@ -300,7 +300,7 @@ show a window when use manager to wrote a demo, just like matplotlib's plt.show(
 
 ---
 ### Canvas3D
-A wx.GLCanvas object, which to render the object, which has a Manager object. you need not use it directly in general, because you can use Viewer3D, which you can control it esaily.
+A wx.GLCanvas object, which to renders the object(s) and has a Manager object. You need not use it directly in general, because you can use Viewer3D, which you can control it easily.
 
 ---
 ### Viewer3D
@@ -320,9 +320,9 @@ A wx.Panel, which has a Canvas3D, and has a navigation bar, you can embed it in 
 ## About ImagePy
 [https://github.com/Image-Py/imagepy](https://github.com/Image-Py/imagepy)
 
-ImagePy is my opensource imageprocess framework, It is a ImageJ of Python, you can wrap any numpy baesd function esaily. And Myvi is a sub module of ImagePy, You can use Myvi without any code.
+ImagePy is my opensource image processihng framework. It is the ImageJ of Python, you can wrap any numpy based function esaily. And Myvi is a sub module of ImagePy. You can use Myvi without any code.
 
 ![](http://myvi.imagepy.org/imgs/tooth.jpg "vessel")
 
-## bug but I can't solve
-In some computer not looks well when set the blend.
+## Bug but I can't currently solve
+On some computer it does not look well when the blend is set.
