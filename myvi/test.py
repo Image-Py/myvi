@@ -21,11 +21,11 @@ def volume():
 	vts, fs, ns, vs = myvi.util.build_surf3d(imgs, 1, 128)
 
 	manager = myvi.Manager()
-	manager.add_obj('volume', vts, fs, ns, (1,0,0))
+	manager.add_obj('vessel', vts, fs, ns, (1,0,0))
 	manager.show('Vessel Demo')
 
 def ball():
-	vts, fs, ns, cs = myvi.build_balls([(100,100,100)],[50], [(1,0,0)])
+	vts, fs, ns, cs = myvi.build_ball((100,100,100),50, (1,0,0))
 	manager = myvi.Manager()
 	manager.add_obj('balls', vts, fs, ns, cs)
 	manager.show('Ball Demo')
@@ -36,7 +36,7 @@ def random_balls():
 	cs = (np.random.rand(10)*255).astype(np.uint8)
 	cs = myvi.linear_color('jet')[cs]/255
 
-	vts, fs, ns, cs = myvi.build_balls(list(os), list(rs), list(cs))
+	vts, fs, ns, cs = myvi.build_balls(os, rs, cs)
 	manager = myvi.Manager()
 	manager.add_obj('balls', vts, fs, ns, cs)
 	manager.show('Random Balls Demo')
@@ -72,7 +72,7 @@ def mesh():
 	y = r*np.cos(phi)  
 	z = r*np.sin(phi)*np.sin(theta)  
 	vts, fs, ns, cs = myvi.build_mesh(x, y, z)
-	cs[:] = myvi.util.auto_lookup(vts[:,1], myvi.util.linear_color('jet'))/255
+	cs[:] = myvi.util.auto_lookup(vts[:,2], myvi.util.linear_color('jet'))/255
 
 	manager = myvi.Manager()
 	obj = manager.add_obj('mesh', vts, fs, ns, cs)
@@ -93,6 +93,15 @@ def ball_ring():
 	line.set_style(mode='grid')
 	manager.show('Balls Ring Demo')
 
+def frame_demo():
+	app = wx.App(False)
+	frm = myvi.Frame3D(None, 'Frame')
+	img = imread('data/dem.png')
+	vts, fs, ns, cs = myvi.util.build_surf2d(img, ds=1, k=0.3, sigma=2)
+	frm.viewer.add_obj_ansy('dem', vts, fs, ns, cs)
+	frm.Show()
+	app.MainLoop()
+
 if __name__ == '__main__':
 	dem()
 	volume()
@@ -101,3 +110,4 @@ if __name__ == '__main__':
 	line()
 	mesh()
 	ball_ring()
+	

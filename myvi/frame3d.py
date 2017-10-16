@@ -8,12 +8,12 @@ class Frame3D(wx.Frame):
 	frms = {}
 
 	def __init__(self, parent, title='Frame3D', manager=None):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = title, pos = wx.DefaultPosition, size = wx.Size( 500,300 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = title, pos = wx.DefaultPosition, size = wx.Size( 800,600 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 		self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 		sizer = wx.BoxSizer( wx.VERTICAL )
 		root = os.path.abspath(os.path.dirname(__file__))
 
-		self.SetIcon(wx.Icon('imgs/logo.ico', wx.BITMAP_TYPE_ICO))
+		self.SetIcon(wx.Icon(os.path.join(root, 'imgs/logo.ico'), wx.BITMAP_TYPE_ICO))
 		self.viewer = canvas3d.Viewer3D( self , manager)
 		sizer.Add( self.viewer, 1, wx.EXPAND |wx.ALL, 0 )
 		self.Bind(wx.EVT_CLOSE, self.on_closing)

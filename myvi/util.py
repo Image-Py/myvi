@@ -1,6 +1,3 @@
-from skimage.measure import marching_cubes_lewiner
-from skimage.filters import sobel_h, sobel_v
-from scipy.ndimage import gaussian_filter
 from time import time
 import numpy as np
 from math import pi
@@ -24,6 +21,8 @@ def build_grididx(r, c):
 	return rs, cs, (idx1 + did).reshape((-1,3))
 
 def build_surf2d(img, ds=1, sigma=0, k=0.2):
+	from skimage.filters import sobel_h, sobel_v
+	from scipy.ndimage import gaussian_filter
 	start = time()
 	img = img[::-ds, ::ds]
 	img = gaussian_filter(img, sigma)
@@ -46,6 +45,7 @@ def build_surf2d(img, ds=1, sigma=0, k=0.2):
 	return vts, fs, ns, cs
 
 def build_surf3d(imgs, ds, level, step=1, c=(1,0,0)):
+	from skimage.measure import marching_cubes_lewiner
 	vts, fs, ns, cs =  marching_cubes_lewiner(imgs[::ds,::ds,::ds], level, step_size=step)
 	vts[:,:2] *= ds
 	cs = (np.ones((len(vts), 3))*c).astype(np.float32)
@@ -71,7 +71,7 @@ def build_mesh(xs, ys, zs, c=(1,0,0)):
 	return vts, fs, ns, cs
 
 def build_balls(os, rs, cs=(1,0,0)):
-	if not isinstance(cs, list):
+	if isinstance(cs, tuple):
 		cs = [cs] * len(os)
 	vtss, fss, nss, css = [], [], [], []
 	for o,r,c in zip(os, rs, cs):
