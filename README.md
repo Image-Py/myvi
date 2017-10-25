@@ -9,7 +9,7 @@ Myvi is a 3D visualization tool, *the name comes from [mayavi](http://code.entho
 vts, fs, ns, cs = myvi.build_ball((100,100,100), 50, (1,0,0))
 
 manager = myvi.Manager()
-manager.add_obj('balls', vts, fs, ns, cs)
+manager.add_surf('balls', vts, fs, ns, cs)
 manager.show('Ball Demo')
 ```
 ![](http://myvi.imagepy.org/imgs/ball.jpg "ball")
@@ -23,7 +23,7 @@ cs = myvi.linear_color('jet')[cs]/255
 
 vts, fs, ns, cs = myvi.build_balls(os, rs, cs)
 manager = myvi.Manager()
-manager.add_obj('balls', vts, fs, ns, cs)
+manager.add_surf('balls', vts, fs, ns, cs)
 manager.show('Random Balls Demo')
  ```
  ![](http://myvi.imagepy.org/imgs/balls.jpg "balls")
@@ -47,7 +47,7 @@ vts, fs, ns, cs = myvi.build_line(x, y, z, (1, 0, 0))
 cs[:] = myvi.auto_lookup(vts[:,2], myvi.linear_color('jet'))/255
 
 manager = myvi.Manager()
-obj = manager.add_obj('line', vts, fs, ns, cs)
+obj = manager.add_surf('line', vts, fs, ns, cs)
 obj.set_style(mode='grid')
 manager.show('Line Rings')
  ```
@@ -64,8 +64,8 @@ vts_b, fs_b, ns_b, cs_b = myvi.build_balls(list(os), list(rs), list(cs))
 vts_l, fs_l, ns_l, cs_l = myvi.build_line(os[:,0], os[:,1], os[:,2], list(cs))
 
 manager = myvi.Manager()
-manager.add_obj('balls', vts_b, fs_b, ns_b, cs_b)
-line = manager.add_obj('line', vts_l, fs_l, ns_l, cs_l)
+manager.add_surf('balls', vts_b, fs_b, ns_b, cs_b)
+line = manager.add_surf('line', vts_l, fs_l, ns_l, cs_l)
 line.set_style(mode='grid')
 manager.show('Balls Ring Demo')
 ```
@@ -84,7 +84,7 @@ vts, fs, ns, cs = myvi.build_mesh(x, y, z)
 cs[:] = myvi.util.auto_lookup(vts[:,2], myvi.util.linear_color('jet'))/255
 
 manager = myvi.Manager()
-obj = manager.add_obj('mesh', vts, fs, ns, cs)
+obj = manager.add_surf('mesh', vts, fs, ns, cs)
 obj.set_style(mode='grid')
 manager.show('Mesh Demo')
  ```
@@ -98,7 +98,7 @@ img = imread('data/dem.png')
 vts, fs, ns, cs = myvi.util.build_surf2d(img, ds=1, k=0.3, sigma=2)
 
 manager = myvi.Manager()
-manager.add_obj('dem', vts, fs, ns, cs)
+manager.add_surf('dem', vts, fs, ns, cs)
 manager.show('DEM Demo')
  ```
  ![](http://myvi.imagepy.org/imgs/dem.jpg "dem")
@@ -111,7 +111,7 @@ imgs = ndimg.gaussian_filter(imgs, 1)
 vts, fs, ns, vs = myvi.util.build_surf3d(imgs, 1, 128)
 
 manager = myvi.Manager()
-manager.add_obj('vessel', vts, fs, ns, (1,0,0))
+manager.add_surf('vessel', vts, fs, ns, (1,0,0))
 manager.show('Vessel Demo')
  ```
  ![](http://myvi.imagepy.org/imgs/vessel.jpg "vessel")
@@ -125,7 +125,7 @@ class YourFrame(wx.Frame):
 		wx.Frame.__init__(...)
 		...
 		self.viewer = Viewer3D(self)
-        self.viewer.add_obj('name', vts, fs, ns, cs)
+        self.viewer.add_surf('name', vts, fs, ns, cs)
 		...
  ```
  
@@ -260,7 +260,7 @@ Surface is a geometry object.
 ### Manager:
 Manage the objects, and their boundbox, background color, mvp matrix, etc.
 
-**add_obj(self, name, vts, fs, ns=None, cs=(0,0,1)):**
+**add_surf(self, name, vts, fs, ns=None, cs=(0,0,1)):**
 > **name:** object's name, you can use get_obj to find it later.
 > 
 > **vts:** vertex, ndarray of N x 3
@@ -311,11 +311,11 @@ A wx.Panel, which has a Canvas3D, and has a navigation bar, you can embed it in 
 > 
 > **manager:** if manager is given, viewer's Canvas3D object will use it, else a new empty  manager is created.
 
-**add_obj(self, name, vts, fs, ns, cs, obj=None, mode=None, blend=None, color=None, visible=None):**
-> you can create a manager, and add object to it, then use it to create a Viewer3D. But after the viewer is created, you should use viewer's add_obj to add object, this make sure the ui refresh.
+**add_surf(self, name, vts, fs, ns, cs, obj=None, mode=None, blend=None, color=None, visible=None):**
+> you can create a manager, and add object to it, then use it to create a Viewer3D. But after the viewer is created, you should use viewer's add_surf to add object, this make sure the ui refresh.
 >
-**add_obj_asyn(self, name, vts, fs, ns, cs, mode=None, blend=None, color=None, visible=None):**
-> sometimes, we want to do some processing background (if the data is too large), then you should use add_obj_asyn instead.
+**add_surf_asyn(self, name, vts, fs, ns, cs, mode=None, blend=None, color=None, visible=None):**
+> sometimes, we want to do some processing background (if the data is too large), then you should use add_surf_asyn instead.
 
 ## About ImagePy
 [https://github.com/Image-Py/imagepy](https://github.com/Image-Py/imagepy)

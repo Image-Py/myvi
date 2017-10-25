@@ -7,27 +7,28 @@ from glob import glob
 import myvi
 
 def dem():
-	img = imread('data/dem.png')
+	img = imread('data/dem.jpg')
 	vts, fs, ns, cs = myvi.util.build_surf2d(img, ds=1, k=0.3, sigma=2)
 
 	manager = myvi.Manager()
-	manager.add_obj('dem', vts, fs, ns, cs)
+	manager.add_surf('dem', vts, fs, ns, cs)
 	manager.show('DEM Demo')
 	
 def volume():
 	fs = glob('data/vessel*.png')
 	imgs = np.array([imread(i, True) for i in fs])
+	print()
 	imgs = ndimg.gaussian_filter(imgs, 1)
-	vts, fs, ns, vs = myvi.util.build_surf3d(imgs, 1, 128)
+	vts, fs, ns, vs = myvi.util.build_surf3d(imgs, 1, 80)
 
 	manager = myvi.Manager()
-	manager.add_obj('vessel', vts, fs, ns, (1,0,0))
+	manager.add_surf('vessel', vts, fs, ns, (1,0,0))
 	manager.show('Vessel Demo')
 
 def ball():
 	vts, fs, ns, cs = myvi.build_ball((100,100,100),50, (1,0,0))
 	manager = myvi.Manager()
-	manager.add_obj('balls', vts, fs, ns, cs)
+	manager.add_surf('balls', vts, fs, ns, cs)
 	manager.show('Ball Demo')
 
 def random_balls():
@@ -38,7 +39,7 @@ def random_balls():
 
 	vts, fs, ns, cs = myvi.build_balls(os, rs, cs)
 	manager = myvi.Manager()
-	manager.add_obj('balls', vts, fs, ns, cs)
+	manager.add_surf('balls', vts, fs, ns, cs)
 	manager.show('Random Balls Demo')
 
 def line():
@@ -59,7 +60,7 @@ def line():
 	cs[:] = myvi.auto_lookup(vts[:,2], myvi.linear_color('jet'))/255
 
 	manager = myvi.Manager()
-	obj = manager.add_obj('line', vts, fs, ns, cs)
+	obj = manager.add_surf('line', vts, fs, ns, cs)
 	obj.set_style(mode='grid')
 	manager.show('Line Rings')
 
@@ -75,7 +76,7 @@ def mesh():
 	cs[:] = myvi.util.auto_lookup(vts[:,2], myvi.util.linear_color('jet'))/255
 
 	manager = myvi.Manager()
-	obj = manager.add_obj('mesh', vts, fs, ns, cs)
+	obj = manager.add_surf('mesh', vts, fs, ns, cs)
 	obj.set_style(mode='grid')
 	manager.show('Mesh Demo')
 
@@ -88,17 +89,32 @@ def ball_ring():
 	vts_b, fs_b, ns_b, cs_b = myvi.build_balls(list(os), list(rs), list(cs))
 	vts_l, fs_l, ns_l, cs_l = myvi.build_line(os[:,0], os[:,1], os[:,2], list(cs))
 	manager = myvi.Manager()
-	manager.add_obj('balls', vts_b, fs_b, ns_b, cs_b)
-	line = manager.add_obj('line', vts_l, fs_l, ns_l, cs_l)
+	manager.add_surf('balls', vts_b, fs_b, ns_b, cs_b)
+	line = manager.add_surf('line', vts_l, fs_l, ns_l, cs_l)
 	line.set_style(mode='grid')
 	manager.show('Balls Ring Demo')
+
+def balls_with_mark():
+	os = np.random.rand(30).reshape((-1,3))
+	rs = np.random.rand(10)/7
+	cs = (np.random.rand(10)*255).astype(np.uint8)
+	cs = myvi.linear_color('jet')[cs]/255
+
+	vts_b, fs_b, ns_b, cs_b = myvi.build_balls(os, rs, cs)
+	cont = ['ID:%s'%i for i in range(10)]
+	vtss, fss, pps, h, color = myvi.build_marks(cont, os, rs, 0.05, (1,1,1))
+	manager = myvi.Manager()
+	manager.add_surf('balls', vts_b, fs_b, ns_b, cs_b)
+	line = manager.add_mark('line', vtss, fss, pps, h, color)
+	line.set_style(mode='grid')
+	manager.show('Balls Mark Demo')
 
 def frame_demo():
 	app = wx.App(False)
 	frm = myvi.Frame3D(None, 'Frame')
-	img = imread('data/dem.png')
+	img = imread('data/dem.jpg')
 	vts, fs, ns, cs = myvi.util.build_surf2d(img, ds=1, k=0.3, sigma=2)
-	frm.viewer.add_obj_ansy('dem', vts, fs, ns, cs)
+	frm.viewer.add_surf_ansy('dem', vts, fs, ns, cs)
 	frm.Show()
 	app.MainLoop()
 
@@ -110,4 +126,5 @@ if __name__ == '__main__':
 	line()
 	mesh()
 	ball_ring()
+	balls_with_mark()
 	
