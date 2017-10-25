@@ -28,6 +28,24 @@ manager.show('Random Balls Demo')
  ```
  ![](http://myvi.imagepy.org/imgs/balls.jpg "balls")
  
+ ### Random balls with text mark
+```python
+os = np.random.rand(30).reshape((-1,3))
+rs = np.random.rand(10)/7
+cs = (np.random.rand(10)*255).astype(np.uint8)
+cs = myvi.linear_color('jet')[cs]/255
+
+vts_b, fs_b, ns_b, cs_b = myvi.build_balls(os, rs, cs)
+cont = ['ID:%s'%i for i in range(10)]
+vtss, fss, pps, h, color = myvi.build_marks(cont, os, rs, 0.05, (1,1,1))
+manager = myvi.Manager()
+manager.add_surf('balls', vts_b, fs_b, ns_b, cs_b)
+line = manager.add_mark('line', vtss, fss, pps, h, color)
+line.set_style(mode='grid')
+manager.show('Balls Mark Demo')
+ ```
+ ![](http://myvi.imagepy.org/imgs/mark.jpg "balls")
+ 
  ### Lines
 ```python
 vts = np.array([(0,0,0),(1,1,0),(2,1,0),(1,0,0)], dtype=np.float32)
@@ -183,6 +201,34 @@ Utilities help to generate geometry and colors. Every build function returns `vt
 
 > **return:** vts, fs, ns, cs
 
+**build_mark(cont, pos, dz, h, color):**
+>
+> **cont:** the text (only support '0-9' and 'ID:')
+>
+> **pos:** center of mark
+>
+> **dz:**  offset forward eye
+>
+> **h:** height of text
+> 
+>  **color:** color of text
+
+> **return:** vts, fs, pos, h, color
+
+**build_marks(cont, pos, dz, h, color):**
+>
+> **cont:** the text s(only support '0-9' and 'ID:')
+>
+> **pos:** centers of mark
+>
+> **dz:**  offsets forward eye
+>
+> **h:** heights of text
+> 
+>  **color:** colors of text
+
+> **return:** vts, fs, pos, hs, colors
+
 **build_line(xs, ys, zs, c):**
 >
 > **xs:** x coordinates of line
@@ -194,7 +240,7 @@ Utilities help to generate geometry and colors. Every build function returns `vt
 > **color:** color of line, can be a rgb tuple or a sequence like vts
 
 > **return:** vts, fs, ns, cs
->
+
 **build_lines(xs, ys, zs, cs):**
 >
 > **xs:** xs coordinates of lines
@@ -261,6 +307,7 @@ Surface is a geometry object.
 Manage the objects, and their boundbox, background color, mvp matrix, etc.
 
 **add_surf(self, name, vts, fs, ns=None, cs=(0,0,1)):**
+>
 > **name:** object's name, you can use get_obj to find it later.
 > 
 > **vts:** vertex, ndarray of N x 3
@@ -272,11 +319,27 @@ Manage the objects, and their boundbox, background color, mvp matrix, etc.
 > **cs:** colors, can be a rgb tuple or a sequence like vts
 
 > **return:** the Surface object
+
+**add_mark(self, name, vts, fs, o, h, cs=(0,0,1)):**
+>
+> **name:** object's name, you can use get_obj to find it later.
 > 
+> **vts:** vertex, ndarray of N x 3
+> 
+> **fs:** faces index of vertex, ndarray of N x 3
+> 
+> **o:** positions of mark
+>
+> **h:** height of mark
+>
+> **cs:** color of mark
+
+> **return:** the MarkText object
+
 **get_obj(self, name):**
 >
 > **name:** find the object by name, return None if not found
->
+
 **show(self, title='Myvi'):** 
 
 Show a window when use manager to wrote a demo, just like matplotlib's plt.show(), when you embed Viewer3D in your Frame, you do not need to call it.
@@ -322,7 +385,7 @@ A wx.Panel, which has a Canvas3D, and has a navigation bar, you can embed it in 
 
 ImagePy is my opensource image processihng framework. It is the ImageJ of Python, you can wrap any numpy based function esaily. And Myvi is a sub module of ImagePy. You can use Myvi without any code.
 
-![](http://myvi.imagepy.org/imgs/tooth.jpg "vessel")
+![](http://myvi.imagepy.org/imgs/imagepy.jpg "vessel")
 
 ## Bug but I can't currently solve
 On some computer it does not look well when the blend is set.
