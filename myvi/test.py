@@ -65,7 +65,7 @@ def line():
 	manager.show('Line Rings')
 
 def mesh():
-	dphi, dtheta = np.pi/20.0, np.pi/20.0  
+	dphi, dtheta = np.pi/80.0, np.pi/80.0  
 	[phi,theta] = np.mgrid[0:np.pi+dphi*1.5:dphi,0:2*np.pi+dtheta*1.5:dtheta]  
 	m0 = 4; m1 = 3; m2 = 2; m3 = 3; m4 = 6; m5 = 2; m6 = 6; m7 = 4;  
 	r = np.sin(m0*phi)**m1 + np.cos(m2*phi)**m3 + np.sin(m4*theta)**m5 + np.cos(m6*theta)**m7  
@@ -118,7 +118,17 @@ def frame_demo():
 	frm.Show()
 	app.MainLoop()
 
+def surface2d():
+	x, y = np.ogrid[-2:2:20j, -2:2:20j]  
+	z = x * np.exp( - x**2 - y**2)
+	vts, fs, ns, cs = myvi.util.build_surf2d(z, ds=1, k=20, sigma=2)
+	cs[:] = myvi.util.auto_lookup(vts[:,2], myvi.util.linear_color('jet'))/255
+	manager = myvi.Manager()
+	manager.add_surf('dem', vts, fs, ns, cs)
+	manager.show('DEM Demo') 
+
 if __name__ == '__main__':
+	surface2d()
 	dem()
 	volume()
 	ball()
@@ -127,4 +137,3 @@ if __name__ == '__main__':
 	mesh()
 	ball_ring()
 	balls_with_mark()
-	
