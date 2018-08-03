@@ -127,7 +127,15 @@ def surface2d():
 	manager.add_surf('dem', vts, fs, ns, cs)
 	manager.show('DEM Demo') 
 
+def arrow():
+	v1, v2 = np.array([[[0,0,0],[5,5,5]],[[0,15,5],[2,8,3]]], dtype=np.float32)
+	vts, fs, ns, c = myvi.util.build_arrows(v1, v2, 1, 1, 1, 1, (1,0,0))
+	manager = myvi.Manager()
+	manager.add_surf('dem', vts, fs, ns, c)
+	manager.show('DEM Demo') 
+
 if __name__ == '__main__':
+	'''
 	surface2d()
 	dem()
 	volume()
@@ -137,3 +145,6 @@ if __name__ == '__main__':
 	mesh()
 	ball_ring()
 	balls_with_mark()
+	'''
+	arrow()
+	#ball_ring()
