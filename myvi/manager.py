@@ -116,7 +116,7 @@ class MarkText:
 		if not visible is None: self.visible = visible
 		if not color is None: self.color = color
 
-	def draw(self, mvp):
+	def draw(self, mvp, light, bright, scatter):
 		if not self.visible: return
 		self.ctx.line_width = 2
 		self.prog['mv'].write(mvp[0].astype(np.float32).tobytes())
