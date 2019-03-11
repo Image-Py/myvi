@@ -80,7 +80,7 @@ def mesh():
 	obj.set_style(mode='grid')
 	manager.show('Mesh Demo')
 
-def ball_ring():
+def ball_ring_box():
 	os = np.random.rand(30).reshape((-1,3))
 	rs = np.random.rand(10)/7
 	cs = (np.random.rand(10)*255).astype(np.uint8)
@@ -88,10 +88,13 @@ def ball_ring():
 
 	vts_b, fs_b, ns_b, cs_b = myvi.build_balls(list(os), list(rs), list(cs))
 	vts_l, fs_l, ns_l, cs_l = myvi.build_line(os[:,0], os[:,1], os[:,2], list(cs))
+	vts_c, fs_c, ns_c, cs_c = myvi.build_cube((0,0,0), (1,1,1))
 	manager = myvi.Manager()
 	manager.add_surf('balls', vts_b, fs_b, ns_b, cs_b)
 	line = manager.add_surf('line', vts_l, fs_l, ns_l, cs_l)
 	line.set_style(mode='grid')
+	box = manager.add_surf('box', vts_c, fs_c, ns_c, cs_c)
+	box.set_style(mode='grid')
 	manager.show('Balls Ring Demo')
 
 def balls_with_mark():
@@ -134,7 +137,15 @@ def arrow():
 	manager.add_surf('dem', vts, fs, ns, c)
 	manager.show('DEM Demo') 
 
+def cube():
+	vts, fs, ns, cs = myvi.build_cube((0,0,0), (1,1,1))
+	manager = myvi.Manager()
+	obj = manager.add_surf('cube', vts, fs, ns, cs)
+	obj.set_style(mode='grid')
+	manager.show('Cube Demo') 
+
 if __name__ == '__main__':
+	volume()
 	'''
 	surface2d()
 	dem()
@@ -143,8 +154,7 @@ if __name__ == '__main__':
 	random_balls()
 	line()
 	mesh()
-	ball_ring()
+	ball_ring_box()
 	balls_with_mark()
-	'''
 	arrow()
-	#ball_ring()
+	'''
