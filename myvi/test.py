@@ -149,12 +149,21 @@ def cube_surf():
 	lut = np.zeros((256,3), dtype=np.uint8)
 	lut[:,0] = np.arange(256)
 	imgs = np.array([camera()[:300,::]]*256)
-	vts, fs, ns, cs = myvi.build_img_cube(imgs)
+	'''
+	imgs = np.zeros((100,200,300), dtype=np.uint8)
+	imgs[:30,10:20,50:60] = 255
+
+	vts, fs, ns, vs = myvi.util.build_surf3d(imgs, 1, 128)
 	manager = myvi.Manager()
+	manager.add_surf('vessel', vts, fs, ns, (1,0,0))
+	'''
+	manager = myvi.Manager()
+	vts, fs, ns, cs = myvi.build_img_cube(imgs)
 	obj = manager.add_surf('cube', vts, fs, ns, cs)
 	vts, fs, ns, cs = myvi.build_img_box(imgs)
 	obj = manager.add_surf('box', vts, fs, ns, cs)
 	obj.set_style(mode='grid')
+	
 	manager.show('Cube Demo') 
 
 
