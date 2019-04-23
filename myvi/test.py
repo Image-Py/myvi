@@ -144,9 +144,25 @@ def cube():
 	obj.set_style(mode='grid')
 	manager.show('Cube Demo') 
 
+def cube_surf():
+	from skimage.data import camera
+	lut = np.zeros((256,3), dtype=np.uint8)
+	lut[:,0] = np.arange(256)
+	imgs = np.array([camera()[:300,::]]*256)
+	vts, fs, ns, cs = myvi.build_img_cube(imgs)
+	manager = myvi.Manager()
+	obj = manager.add_surf('cube', vts, fs, ns, cs)
+	vts, fs, ns, cs = myvi.build_img_box(imgs)
+	obj = manager.add_surf('box', vts, fs, ns, cs)
+	obj.set_style(mode='grid')
+	manager.show('Cube Demo') 
+
+
 if __name__ == '__main__':
-	volume()
+
+	cube_surf()
 	'''
+	volume()
 	surface2d()
 	dem()
 	volume()
