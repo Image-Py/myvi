@@ -216,6 +216,24 @@ def build_img_cube(imgs, ds=1):
 def build_img_box(imgs, color=(1,1,1)):
 	return build_cube((-1,-1,-1), imgs.shape[:3], color)
 
+def build_coord(m, cs=np.eye(3)):
+	data = m.copy().T
+	data[:3,:3] += data[3,:3]
+	pts = data[:,:3][[3,0,3,3,1,3,3,2,3]].T
+	cs = cs[[0,0,0,1,1,1,2,2,2]]
+	return build_line(pts[0], pts[1], pts[2], cs)
+
+def build_coords(ms, color=np.eye(3)):
+	vtss, fss, nss, css = [], [], [], []
+	for m in ms:
+		vts, fs, ns, cs = build_coord(m, color)
+		vtss.append(vts)
+		fss.append(fs+len(fss)*9)
+		nss.append(ns)
+		css.append(cs)
+	return np.vstack(vtss), np.vstack(fss), np.vstack(nss), np.vstack(css)
+
+
 cmp = {'rainbow':[(127, 0, 255), (43, 126, 246), (42, 220, 220), (128, 254, 179), (212, 220, 127), (255, 126, 65), (255, 0, 0)],
 	'jet':[(0, 0, 127), (0, 40, 255), (0, 212, 255), (124, 255, 121), (255, 229, 0), (255, 70, 0), (127, 0, 0)],
 	'ocean':[(0, 127, 0), (0, 64, 42), (0, 0, 85), (0, 64, 128), (0, 127, 170), (129, 192, 213), (255, 255, 255)],
